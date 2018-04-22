@@ -2,7 +2,7 @@
 ![Swift](http://img.shields.io/badge/swift-3.0-brightgreen.svg)&nbsp;[![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)&nbsp;[![CocoaPods](https://img.shields.io/cocoapods/v/NHRangeSlider.svg)](https://github.com/thehung111/NHRangeSlider)
 
 
-A custom range slider in Swift. Well-documented with examples. Forked from [RangeSlider](https://github.com/warchimede/RangeSlider) with some enhancements.
+A custom range slider in Swift. Well-documented with examples. Forked from [RangeSlider](https://github.com/thehung11/NHRangeSlider) with some enhancements. Fixed with Swift 4.1
 
 <img src="screenshot.png" />
 
@@ -36,10 +36,10 @@ $ pod install
 
 ### Carthage
 
-Put the following in your Cartfile:
+With swift 4.1, put the following in your Cartfile:
 
 ```ogdl
- github "thehung111/NHRangeSlider" ~> 0.2
+ github "SonNguyen177/NHRangeSlider" "master"
 ```
  
 Run `carthage update --platform iOS --no-use-binaries` 
@@ -156,6 +156,7 @@ The range slider view (**NHRangeSliderView**) can be customized and information 
   + `lowerValue` : The value corresponding to the left thumb current position
   + `upperValue` : The value corresponding to the right thumb current position
   + `stepValue` : If set, will snap to discrete step points along the slider . Default to nil.
+  + `lineTrackHeight` : Set height for track, default = 4
   + `trackTintColor` : The track color
   + `trackHighlightTintColor` : The color of the section of the track located between the two thumbs
   + `thumbTintColor`: The thumb color

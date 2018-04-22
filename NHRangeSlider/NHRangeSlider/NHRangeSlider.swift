@@ -23,9 +23,13 @@ public class RangeSliderTrackLayer: CALayer {
             return
         }
         
+        let height = rangeSlider?.trackHeight
+        
+        let frame = CGRect(x: bounds.minX, y: bounds.midY - height! / 2, width: bounds.width, height: height!)
+        
         // Clip
         let cornerRadius = bounds.height * slider.curvaceousness / 2.0
-        let path = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
+        let path = UIBezierPath(roundedRect: frame, cornerRadius: cornerRadius)
         ctx.addPath(path.cgPath)
         
         // Fill the track
@@ -37,7 +41,7 @@ public class RangeSliderTrackLayer: CALayer {
         ctx.setFillColor(slider.trackHighlightTintColor.cgColor)
         let lowerValuePosition = CGFloat(slider.positionForValue(slider.lowerValue))
         let upperValuePosition = CGFloat(slider.positionForValue(slider.upperValue))
-        let rect = CGRect(x: lowerValuePosition, y: 0.0, width: upperValuePosition - lowerValuePosition, height: bounds.height)
+        let rect = CGRect(x: lowerValuePosition, y: bounds.midY - height! / 2, width: upperValuePosition - lowerValuePosition, height: height!)
         ctx.fill(rect)
     }
 }
@@ -103,13 +107,18 @@ public class RangeSliderThumbLayer: CALayer {
 
 
 /// Range slider view with upper, lower bounds
-@IBDesignable
 open class NHRangeSlider: UIControl {
     
     //MARK: properties
     
+    open var  trackHeight: CGFloat = 4 {
+        didSet {
+            updateLayerFrames()
+        }
+    }
+    
     /// minimum value
-    @IBInspectable open var minimumValue: Double = 0.0 {
+    open var minimumValue: Double = 100.0 {
         willSet(newValue) {
             assert(newValue < maximumValue, "NHRangeSlider: minimumValue should be lower than maximumValue")
         }
@@ -119,7 +128,7 @@ open class NHRangeSlider: UIControl {
     }
     
     /// max value
-    @IBInspectable open var maximumValue: Double = 100.0 {
+    open var maximumValue: Double = 1000.0 {
         willSet(newValue) {
             assert(newValue > minimumValue, "NHRangeSlider: maximumValue should be greater than minimumValue")
         }
@@ -129,7 +138,7 @@ open class NHRangeSlider: UIControl {
     }
     
     /// value for lower thumb
-    @IBInspectable open var lowerValue: Double = 0.0 {
+    open var lowerValue: Double = 100.0 {
         didSet {
             if lowerValue < minimumValue {
                 lowerValue = minimumValue
@@ -139,7 +148,7 @@ open class NHRangeSlider: UIControl {
     }
     
     /// value for upper thumb
-    @IBInspectable open var upperValue: Double = 100.0 {
+    open var upperValue: Double = 1000.0 {
         didSet {
             if upperValue > maximumValue {
                 upperValue = maximumValue
@@ -150,7 +159,7 @@ open class NHRangeSlider: UIControl {
     
     
     /// stepValue. If set, will snap to discrete step points along the slider . Default to nil
-    @IBInspectable open var stepValue: Double? = nil {
+    open var stepValue: Double? = nil {
         willSet(newValue) {
             if newValue != nil {
                 assert(newValue! > 0, "NHRangeSlider: stepValue must be positive")
@@ -166,21 +175,21 @@ open class NHRangeSlider: UIControl {
             updateLayerFrames()
         }
     }
-
+    
     
     
     /// minimum distance between the upper and lower thumbs.
-    @IBInspectable open var gapBetweenThumbs: Double = 2.0
+    open var gapBetweenThumbs: Double = 2.0
     
     /// tint color for track between 2 thumbs
-    @IBInspectable open var trackTintColor: UIColor = UIColor(white: 0.9, alpha: 1.0) {
+    open var trackTintColor: UIColor = UIColor(white: 0.9, alpha: 1.0) {
         didSet {
             trackLayer.setNeedsDisplay()
         }
     }
     
     /// track highlight tint color
-    @IBInspectable open var trackHighlightTintColor: UIColor = UIColor(red: 0.0, green: 0.45, blue: 0.94, alpha: 1.0) {
+    open var trackHighlightTintColor: UIColor = UIColor(red: 0.0, green: 0.45, blue: 0.94, alpha: 1.0) {
         didSet {
             trackLayer.setNeedsDisplay()
         }
@@ -188,7 +197,7 @@ open class NHRangeSlider: UIControl {
     
     
     /// thumb tint color
-    @IBInspectable open var thumbTintColor: UIColor = UIColor.white {
+    open var thumbTintColor: UIColor = UIColor.white {
         didSet {
             lowerThumbLayer.setNeedsDisplay()
             upperThumbLayer.setNeedsDisplay()
@@ -196,7 +205,7 @@ open class NHRangeSlider: UIControl {
     }
     
     /// thumb border color
-    @IBInspectable open var thumbBorderColor: UIColor = UIColor.gray {
+    open var thumbBorderColor: UIColor = UIColor.gray {
         didSet {
             lowerThumbLayer.strokeColor = thumbBorderColor
             upperThumbLayer.strokeColor = thumbBorderColor
@@ -205,7 +214,7 @@ open class NHRangeSlider: UIControl {
     
     
     /// thumb border width
-    @IBInspectable open var thumbBorderWidth: CGFloat = 0.5 {
+    open var thumbBorderWidth: CGFloat = 0.5 {
         didSet {
             lowerThumbLayer.lineWidth = thumbBorderWidth
             upperThumbLayer.lineWidth = thumbBorderWidth
@@ -213,7 +222,7 @@ open class NHRangeSlider: UIControl {
     }
     
     /// set 0.0 for square thumbs to 1.0 for circle thumbs
-    @IBInspectable open var curvaceousness: CGFloat = 1.0 {
+    open var curvaceousness: CGFloat = 1.0 {
         didSet {
             if curvaceousness < 0.0 {
                 curvaceousness = 0.0
@@ -297,7 +306,7 @@ open class NHRangeSlider: UIControl {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         
-        trackLayer.frame = bounds.insetBy(dx: 0.0, dy: bounds.height/3)
+        trackLayer.frame = bounds.insetBy(dx: 0.0, dy: bounds.height/5)
         trackLayer.setNeedsDisplay()
         
         let lowerThumbCenter = CGFloat(positionForValue(lowerValue))

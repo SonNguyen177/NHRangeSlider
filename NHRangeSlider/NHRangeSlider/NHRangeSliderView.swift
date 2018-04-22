@@ -30,7 +30,7 @@ public extension NHRangeSliderViewDelegate{
 
 /// Range slider with labels for upper and lower thumbs, title label and configurable step value (optional)
 open class NHRangeSliderView: UIView {
-
+    
     //MARK: properties
     
     open var delegate: NHRangeSliderViewDelegate? = nil
@@ -68,21 +68,21 @@ open class NHRangeSliderView: UIView {
     open var thumbLabelStyle: NHSliderLabelStyle = .STICKY
     
     /// minimum value
-    @IBInspectable open var minimumValue: Double = 0.0 {
+    open var minimumValue: Double = 0.0 {
         didSet {
             self.rangeSlider?.minimumValue = minimumValue
         }
     }
     
     /// max value
-    @IBInspectable open var maximumValue: Double = 100.0 {
+    open var maximumValue: Double = 1000.0 {
         didSet {
             self.rangeSlider?.maximumValue = maximumValue
         }
     }
     
     /// value for lower thumb
-    @IBInspectable open var lowerValue: Double = 0.0 {
+    open var lowerValue: Double = 100 {
         didSet {
             self.rangeSlider?.lowerValue = lowerValue
             self.updateLabelDisplay()
@@ -90,7 +90,7 @@ open class NHRangeSliderView: UIView {
     }
     
     /// value for upper thumb
-    @IBInspectable open var upperValue: Double = 100.0 {
+    open var upperValue: Double = 1000 {
         didSet {
             self.rangeSlider?.upperValue = upperValue
             self.updateLabelDisplay()
@@ -98,7 +98,7 @@ open class NHRangeSliderView: UIView {
     }
     
     /// stepValue. If set, will snap to discrete step points along the slider . Default to nil
-    @IBInspectable open var stepValue: Double? = nil {
+    open var stepValue: Double? = nil {
         didSet {
             self.rangeSlider?.stepValue = stepValue
         }
@@ -112,7 +112,7 @@ open class NHRangeSliderView: UIView {
     }
     
     /// tint color for track between 2 thumbs
-    @IBInspectable open var trackTintColor: UIColor = UIColor(white: 0.9, alpha: 1.0) {
+    open var trackTintColor: UIColor = UIColor(white: 0.9, alpha: 1.0) {
         didSet {
             self.rangeSlider?.trackTintColor = trackTintColor
         }
@@ -120,7 +120,7 @@ open class NHRangeSliderView: UIView {
     
     
     /// track highlight tint color
-    @IBInspectable open var trackHighlightTintColor: UIColor = UIColor(red: 0.0, green: 0.45, blue: 0.94, alpha: 1.0) {
+    open var trackHighlightTintColor: UIColor = UIColor(red: 0.0, green: 0.45, blue: 0.94, alpha: 1.0) {
         didSet {
             self.rangeSlider?.trackHighlightTintColor = trackHighlightTintColor
         }
@@ -128,14 +128,14 @@ open class NHRangeSliderView: UIView {
     
     
     /// thumb tint color
-    @IBInspectable open var thumbTintColor: UIColor = UIColor.white {
+    open var thumbTintColor: UIColor = UIColor.white {
         didSet {
             self.rangeSlider?.thumbTintColor = thumbTintColor
         }
     }
     
     /// thumb border color
-    @IBInspectable open var thumbBorderColor: UIColor = UIColor.gray {
+    open var thumbBorderColor: UIColor = UIColor.gray {
         didSet {
             self.rangeSlider?.thumbBorderColor = thumbBorderColor
         }
@@ -143,27 +143,35 @@ open class NHRangeSliderView: UIView {
     
     
     /// thumb border width
-    @IBInspectable open var thumbBorderWidth: CGFloat = 0.5 {
+    open var thumbBorderWidth: CGFloat = 0.5 {
         didSet {
             self.rangeSlider?.thumbBorderWidth = thumbBorderWidth
-
+            
         }
     }
     
     /// set 0.0 for square thumbs to 1.0 for circle thumbs
-    @IBInspectable open var curvaceousness: CGFloat = 1.0 {
+    open var curvaceousness: CGFloat = 1.0 {
         didSet {
             self.rangeSlider?.curvaceousness = curvaceousness
         }
     }
     
     /// thumb width and height
-    @IBInspectable open var thumbSize: CGFloat = 32.0 {
+    open var thumbSize: CGFloat = 32.0 {
         didSet {
             if let slider = self.rangeSlider {
                 var oldFrame = slider.frame
                 oldFrame.size.height = thumbSize
                 slider.frame = oldFrame
+            }
+        }
+    }
+    
+    open var lineTrackHeight: CGFloat = 4 {
+        didSet {
+            if let slider = self.rangeSlider {
+                slider.trackHeight = lineTrackHeight
             }
         }
     }
@@ -220,8 +228,8 @@ open class NHRangeSliderView: UIView {
     /// Selected value for filterItem will also be updated
     ///
     /// - Parameter rangeSlider: the changed rangeSlider
-    open func rangeSliderValueChanged(_ rangeSlider: NHRangeSlider) {
-       
+    @objc open func rangeSliderValueChanged(_ rangeSlider: NHRangeSlider) {
+        
         delegate?.sliderValueChanged(slider: rangeSlider)
         
         self.updateLabelDisplay()
@@ -241,7 +249,7 @@ open class NHRangeSliderView: UIView {
             // for stepped value we animate the labels
             if self.stepValue != nil && self.thumbLabelStyle == .FOLLOW {
                 UIView.animate(withDuration: 0.1, animations: {
-                     self.layoutSubviews()
+                    self.layoutSubviews()
                 })
             }
             else {
@@ -261,20 +269,20 @@ open class NHRangeSliderView: UIView {
             let commonWidth = self.bounds.width
             var titleLabelMaxY : CGFloat = 0
             
-            if !titleLabel.isHidden && titleLabel.text != nil && titleLabel.text!.characters.count > 0 {
+            if !titleLabel.isHidden && titleLabel.text != nil && titleLabel.text!.count > 0 {
                 titleLabel.frame = CGRect(x: 0,
                                           y: 0,
                                           width: commonWidth  ,
-                                          height: (titleLabel.font.lineHeight + self.spacing ) )
+                                          height: (titleLabel.font.lineHeight ) )
                 
                 titleLabelMaxY = titleLabel.frame.origin.y + titleLabel.frame.size.height
             }
             
             rangeSlider.frame = CGRect(x: 0,
-                                       y: titleLabelMaxY + lowerLabel.font.lineHeight + self.spacing,
+                                       y: titleLabelMaxY + self.spacing,
                                        width: commonWidth ,
                                        height: thumbSize )
-
+            
             let lowerWidth = self.estimatelabelSize(font: lowerLabel.font, string: lowerLabel.text!, constrainedToWidth: Double(commonWidth)).width
             let upperWidth = self.estimatelabelSize(font: upperLabel.font, string: upperLabel.text!, constrainedToWidth: Double(commonWidth)).width
             
@@ -283,8 +291,8 @@ open class NHRangeSliderView: UIView {
             
             
             if self.thumbLabelStyle == .FOLLOW {
-               lowerLabelX = rangeSlider.lowerThumbLayer.frame.midX  - lowerWidth / 2
-               upperLabelX = rangeSlider.upperThumbLayer.frame.midX  - upperWidth / 2
+                lowerLabelX = rangeSlider.lowerThumbLayer.frame.midX  - lowerWidth / 2
+                upperLabelX = rangeSlider.upperThumbLayer.frame.midX  - upperWidth / 2
             }
             else {
                 // fix lower label to left and upper label to right
@@ -292,15 +300,16 @@ open class NHRangeSliderView: UIView {
                 upperLabelX = rangeSlider.frame.origin.x + rangeSlider.frame.size.width - thumbSize + self.spacing
             }
             
+            titleLabelMaxY +=  4 + thumbSize + self.spacing
             lowerLabel.frame = CGRect(      x: lowerLabelX,
                                             y: titleLabelMaxY,
                                             width: lowerWidth ,
-                                            height: lowerLabel.font.lineHeight + self.spacing )
+                                            height: lowerLabel.font.lineHeight)
             
             upperLabel.frame = CGRect(      x: upperLabelX,
                                             y: titleLabelMaxY,
                                             width: upperWidth ,
-                                            height: upperLabel.font.lineHeight + self.spacing )
+                                            height: upperLabel.font.lineHeight)
             
         }
         
@@ -315,7 +324,7 @@ open class NHRangeSliderView: UIView {
             
             var titleLabelMaxY : CGFloat = 0
             
-            if !titleLabel.isHidden && titleLabel.text != nil && titleLabel.text!.characters.count > 0 {
+            if !titleLabel.isHidden && titleLabel.text != nil && titleLabel.text!.count > 0 {
                 titleLabelMaxY = titleLabel.font.lineHeight + self.spacing
             }
             
@@ -337,12 +346,12 @@ open class NHRangeSliderView: UIView {
     ///
     /// - returns: string size for constrained width
     private func estimatelabelSize(font: UIFont,string: String, constrainedToWidth width: Double) -> CGSize{
-        return string.boundingRect(with: CGSize(width: width, height: DBL_MAX),
+        return string.boundingRect(with: CGSize(width: width, height: .greatestFiniteMagnitude),
                                    options: NSStringDrawingOptions.usesLineFragmentOrigin,
-                                   attributes: [NSFontAttributeName: font],
+                                   attributes: [NSAttributedStringKey.font: font],
                                    context: nil).size
-
+        
     }
     
-
+    
 }

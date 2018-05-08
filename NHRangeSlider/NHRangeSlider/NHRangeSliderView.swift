@@ -273,13 +273,13 @@ open class NHRangeSliderView: UIView {
                 titleLabel.frame = CGRect(x: 0,
                                           y: 0,
                                           width: commonWidth  ,
-                                          height: (titleLabel.font.lineHeight ) )
+                                          height: (titleLabel.font.lineHeight + self.spacing) )
                 
                 titleLabelMaxY = titleLabel.frame.origin.y + titleLabel.frame.size.height
             }
-            
+           
             rangeSlider.frame = CGRect(x: 0,
-                                       y: titleLabelMaxY + self.spacing,
+                                       y: titleLabelMaxY + lowerLabel.font.lineHeight + self.spacing,
                                        width: commonWidth ,
                                        height: thumbSize )
             
@@ -289,10 +289,13 @@ open class NHRangeSliderView: UIView {
             var lowerLabelX : CGFloat = 0
             var upperLabelX : CGFloat = 0
             
+            let thumbSizePadding = thumbSize/3
             
             if self.thumbLabelStyle == .FOLLOW {
-                lowerLabelX = rangeSlider.lowerThumbLayer.frame.midX  - lowerWidth / 2
-                upperLabelX = rangeSlider.upperThumbLayer.frame.midX  - upperWidth / 2
+                //update : lower rightAlign
+                lowerLabelX = rangeSlider.lowerThumbLayer.frame.origin.x - lowerWidth + 2 * thumbSizePadding
+                // upper leftAlign
+                upperLabelX = rangeSlider.upperThumbLayer.frame.origin.x  + thumbSizePadding - 3
             }
             else {
                 // fix lower label to left and upper label to right
@@ -300,16 +303,15 @@ open class NHRangeSliderView: UIView {
                 upperLabelX = rangeSlider.frame.origin.x + rangeSlider.frame.size.width - thumbSize + self.spacing
             }
             
-            titleLabelMaxY +=  4 + thumbSize + self.spacing
             lowerLabel.frame = CGRect(      x: lowerLabelX,
                                             y: titleLabelMaxY,
                                             width: lowerWidth ,
-                                            height: lowerLabel.font.lineHeight)
+                                            height: lowerLabel.font.lineHeight + self.spacing)
             
             upperLabel.frame = CGRect(      x: upperLabelX,
                                             y: titleLabelMaxY,
                                             width: upperWidth ,
-                                            height: upperLabel.font.lineHeight)
+                                            height: upperLabel.font.lineHeight + self.spacing)
             
         }
         

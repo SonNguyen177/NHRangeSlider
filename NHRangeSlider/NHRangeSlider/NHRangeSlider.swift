@@ -22,9 +22,7 @@ public class RangeSliderTrackLayer: CALayer {
         guard let slider = rangeSlider else {
             return
         }
-        
         let height = rangeSlider?.trackHeight
-        
         let frame = CGRect(x: bounds.minX, y: bounds.midY - height! / 2, width: bounds.width, height: height!)
         
         // Clip
@@ -41,7 +39,8 @@ public class RangeSliderTrackLayer: CALayer {
         ctx.setFillColor(slider.trackHighlightTintColor.cgColor)
         let lowerValuePosition = CGFloat(slider.positionForValue(slider.lowerValue))
         let upperValuePosition = CGFloat(slider.positionForValue(slider.upperValue))
-        let rect = CGRect(x: lowerValuePosition, y: bounds.midY - height! / 2, width: upperValuePosition - lowerValuePosition, height: height!)
+        let thumbPadding = bounds.height / 3
+        let rect = CGRect(x: lowerValuePosition - 2 * thumbPadding, y: bounds.midY - height! / 2, width: upperValuePosition - lowerValuePosition, height: height!)
         ctx.fill(rect)
     }
 }
@@ -82,7 +81,8 @@ public class RangeSliderThumbLayer: CALayer {
             return
         }
         
-        let thumbFrame = bounds.insetBy(dx: 2.0, dy: 2.0)
+        let thumbFrame = bounds.insetBy(dx: 16, dy: 16)
+        //print(thumbFrame)
         let cornerRadius = thumbFrame.height * slider.curvaceousness / 2.0
         let thumbPath = UIBezierPath(roundedRect: thumbFrame, cornerRadius: cornerRadius)
         
@@ -118,7 +118,7 @@ open class NHRangeSlider: UIControl {
     }
     
     /// minimum value
-    open var minimumValue: Double = 100.0 {
+    open var minimumValue: Double = 0 {
         willSet(newValue) {
             assert(newValue < maximumValue, "NHRangeSlider: minimumValue should be lower than maximumValue")
         }
@@ -138,7 +138,7 @@ open class NHRangeSlider: UIControl {
     }
     
     /// value for lower thumb
-    open var lowerValue: Double = 100.0 {
+    open var lowerValue: Double = 0 {
         didSet {
             if lowerValue < minimumValue {
                 lowerValue = minimumValue
@@ -306,7 +306,7 @@ open class NHRangeSlider: UIControl {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         
-        trackLayer.frame = bounds.insetBy(dx: 0.0, dy: bounds.height/5)
+        trackLayer.frame = bounds.insetBy(dx: thumbWidth/3, dy: bounds.height/5)
         trackLayer.setNeedsDisplay()
         
         let lowerThumbCenter = CGFloat(positionForValue(lowerValue))

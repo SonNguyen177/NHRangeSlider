@@ -243,6 +243,13 @@ open class NHRangeSliderView: UIView {
         
         self.lowerLabel?.text = String(format: self.lowerDisplayStringFormat, rangeSlider!.lowerValue )
         self.upperLabel?.text = String(format: self.upperDisplayStringFormat, rangeSlider!.upperValue )
+        if  rangeSlider!.upperValue == self.maximumValue {
+            if let index = self.upperDisplayStringFormat.index(of: " ") {
+                var maxAddedPlus  = self.upperDisplayStringFormat
+                maxAddedPlus.insert(contentsOf: "+", at: index)
+                self.upperLabel?.text = String(format: maxAddedPlus, rangeSlider!.upperValue )
+            }
+        }
         
         if self.lowerLabel != nil {
             
@@ -295,7 +302,7 @@ open class NHRangeSliderView: UIView {
                 //update : lower rightAlign
                 lowerLabelX = rangeSlider.lowerThumbLayer.frame.origin.x - lowerWidth + 2 * thumbSizePadding
                 // upper leftAlign
-                upperLabelX = rangeSlider.upperThumbLayer.frame.origin.x  + thumbSizePadding - 3
+                upperLabelX = rangeSlider.upperThumbLayer.frame.origin.x  + thumbSizePadding - 10
             }
             else {
                 // fix lower label to left and upper label to right

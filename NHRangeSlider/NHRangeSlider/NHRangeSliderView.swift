@@ -241,8 +241,17 @@ open class NHRangeSliderView: UIView {
     // update labels display
     open func updateLabelDisplay() {
         
-        self.lowerLabel?.text = String(format: self.lowerDisplayStringFormat, rangeSlider!.lowerValue )
-        self.upperLabel?.text = String(format: self.upperDisplayStringFormat, rangeSlider!.upperValue )
+        
+        var lowerVisibleValue = rangeSlider!.lowerValue
+        var upperVisibleValue = rangeSlider!.upperValue
+        if let stepValue = stepValue {
+            lowerVisibleValue = round(rangeSlider!.lowerValue / stepValue) * stepValue
+            upperVisibleValue = round(rangeSlider!.upperValue / stepValue) * stepValue
+            
+        }
+        
+        self.lowerLabel?.text = String(format: self.lowerDisplayStringFormat, lowerVisibleValue )
+        self.upperLabel?.text = String(format: self.upperDisplayStringFormat, upperVisibleValue )
         if  rangeSlider!.upperValue == self.maximumValue {
             if let index = self.upperDisplayStringFormat.index(of: " ") {
                 var maxAddedPlus  = self.upperDisplayStringFormat
